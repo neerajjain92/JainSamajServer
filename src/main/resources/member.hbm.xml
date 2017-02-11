@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.jainsamaj.model.Member" table="members" schema="public">
+        <id name="memberId" type="java.lang.Long">
+            <column name="id" />
+            <generator class="sequence">
+                <param name="sequence">members_seq</param>
+            </generator>
+        </id>
+        <property name="firstName" type="string">
+            <column name="first_name" length="10"  />
+        </property>
+        <property name="middleName" type="string">
+            <column name="middle_name" length="10"  />
+        </property>
+        <property name="lastName" type="string">
+            <column name="last_name" length="10"  />
+        </property>
+        <property name="relationWithApplicant" type="string">
+            <column name="relation_with_applicant" length="50"/>
+        </property>
+        <property name="dob" type="date">
+            <column name="dob"/>
+        </property>
+        <property name="anniversaryDate" type="date">
+            <column name="anniversary_date"/>
+        </property>
+        <property name="gender" type="string">
+            <column name="gender" length="6"  />
+        </property>
+        <property name="maritalStatus" type="string">
+            <column name="marital_status" length="20"  />
+        </property>
+        <property name="residentialAddress" type="text">
+            <column name="res_address" />
+        </property>
+        <property name="officeAddress" type="text">
+            <column name="office_address"  />
+        </property>
+        <property name="state" type="string">
+            <column name="state" length="50" />
+        </property>
+        <property name="city" type="string">
+            <column name="city" length="50"/>
+        </property>
+        <property name="pinCode" type="string">
+            <column name="pincode" length="20"/>
+        </property>
+        <property name="mobileNumber" type="string">
+            <column name="mobile_number" length="10"/>
+        </property>
+        <property name="landLineNumber" type="string">
+            <column name="landline_number" length="20"  />
+        </property>
+        <property name="occupationProfile" type="string">
+            <column name="occupation_profile" length="50"  />
+        </property>
+        <property name="nativePlace" type="string">
+            <column name="native_place" length="50"  />
+        </property>
+        <property name="emailId" type="string">
+            <column name="email_id" length="50"/>
+        </property>
+        <property name="feedback" type="text">
+            <column name="feedback" />
+        </property>
+        <property name="associationWithOtherOrganisation" type="text">
+            <column name="association_with_other_organisation" />
+        </property>
+        <property name="specialInterest" type="text">
+            <column name="special_interest"/>
+        </property>
+        <property name="allottedMemberId" type="string">
+            <column name="allotted_member_id" length="20"  />
+        </property>
+        <property name="createdById" type="string">
+            <column name="creation_by_id" length="20"  />
+        </property>
+        <property name="creationDtm" type="timestamp">
+            <column name="creation_dtm"/>
+        </property>
+    </class>
+</hibernate-mapping>
