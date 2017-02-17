@@ -77,6 +77,27 @@ public class GenericDao {
         }
     }
 
+    public void updateEntity(Object obj) throws Exception{
+        Session session = null;
+        Transaction tx = null;
+        try {
+            SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+            session = sessionFactory.openSession();
+
+            tx = session.beginTransaction();
+            session.update(obj);
+            session.flush();
+            tx.commit();
+            tx = null;
+        }catch (Exception e){
+            e.printStackTrace();
+            DBUtil.rollBackTransaction(tx);
+            throw new Exception("Error while Updating Entity");
+        }finally {
+            DBUtil.closeSession(session);
+        }
+    }
+
     public void deleteEntity(Object obj) throws Exception {
         Session session = null;
         Transaction tx = null;

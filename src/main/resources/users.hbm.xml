@@ -24,5 +24,35 @@
         <property name="creationDtm" type="timestamp">
             <column name="creation_dtm" />
         </property>
+        <property name="mobileNumber" type="string">
+            <column name="mobile_number" length="10"/>
+        </property>
+        <property name="emailId" type="string">
+            <column name="email" />
+        </property>
+        <property name="topicARN" type="string">
+            <column name="topic_arn" />
+        </property>
+        <property name="topicSubscriptionId" type="string">
+            <column name="topic_subscription_id" />
+        </property>
+        <property name="topicCreationDtm" type="timestamp">
+            <column name="topic_creation_dtm" />
+        </property>
+        <property name="otpSentDtm" type="timestamp">
+            <column name="otp_sent_dtm" />
+        </property>
+        <property name="otp" type="integer">
+            <column name="otp" />
+        </property>
+        <property name="pmfKey" type="string">
+            <column name="pmf_key"></column>
+        </property>
+        <property name="updationDtm" type="timestamp">
+            <column name="updation_dtm"></column>
+        </property>
+        <property name="passwordChangeDtm" type="timestamp">
+            <column name="password_change_dtm"></column>
+        </property>
     </class>
 </hibernate-mapping>

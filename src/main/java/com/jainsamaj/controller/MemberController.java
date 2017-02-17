@@ -97,7 +97,7 @@ public class MemberController {
         try {
             MemberService memberService = new MemberService();
             memberService.deleteMember(memberId,loggedInUser);
-            deleteMemberResponse.put("message","Member Deleted Successfully");
+            deleteMemberResponse.put("message","Member Deleted Successfully from the Jain Samaj Directory !!");
         }catch (Exception ex){
             deleteMemberResponse.put("error",ex.getMessage());
             deleteMemberResponse.put("status","fail");

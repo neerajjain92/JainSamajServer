@@ -3,11 +3,13 @@ package com.jainsamaj.controller;
 import com.google.gson.Gson;
 import com.jainsamaj.exception.AuthenticationException;
 import com.jainsamaj.exception.UserCreationException;
+import com.jainsamaj.model.ForgotPassword;
 import com.jainsamaj.model.Users;
 import com.jainsamaj.model.UserProfile;
 import com.jainsamaj.services.UserService;
 import com.jainsamaj.util.EncryptionUtil;
 
+import javax.jws.soap.SOAPBinding;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
@@ -42,7 +44,7 @@ public class LoginController {
         Users users = null;
 
         try {
-            users = UserService.convertJSONIntoUser(requestJSON);
+            users = UserService.convertJSONIntoBean(requestJSON,Users.class);
 
             try {
                 UserService userService = new UserService();
@@ -77,18 +79,20 @@ public class LoginController {
         Response.Status status=null;
 
         try {
-            users = UserService.convertJSONIntoUser(requestJSON);
+            users = UserService.convertJSONIntoBean(requestJSON,Users.class);
 
             try {
                 UserService userService = new UserService();
                 Long userId = userService.createNewUser(users);
                 signUpResponse.put("userId", userId);
+                signUpResponse.put("note","User Created Successfully, Please Check your email and confirm subscription.");
             } catch (UserCreationException ex) {
                 signUpResponse.put("error",ex.getMessage());
                 signUpResponse.put("status","fail");
             }
 
         }catch (Exception e){
+            e.printStackTrace();
             signUpResponse.put("error","Request JSON is invalid");
             signUpResponse.put("status","fail");
         }
@@ -112,5 +116,61 @@ public class LoginController {
     public Response signOut(){
         NewCookie cookie=new NewCookie("AuthenticationKey","deleted", "/", "","Authorization Key removed from request",0,false);
         return Response.serverError().cookie(cookie).build();
+    }
+
+    @POST
+    @Path("/forgotPassword")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String forgotPassword(String requestJSON) {
+        Map<String,Object> forgotPasswordResponse = new HashMap<>();
+        Response.Status status=null;
+
+        try {
+            Users users = UserService.convertJSONIntoBean(requestJSON,Users.class);
+            UserService userService = new UserService();
+            try {
+                userService.forgotPassword(users.getEmailId());
+                forgotPasswordResponse.put("status","success");
+            }catch (Exception ex){
+                ex.printStackTrace();
+                forgotPasswordResponse.put("status","fail");
+                forgotPasswordResponse.put("error",ex.getMessage());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            forgotPasswordResponse.put("error","Request JSON is invalid");
+            forgotPasswordResponse.put("status","fail");
+        }
+        Gson gson = new Gson();
+        return gson.toJson(forgotPasswordResponse);
+    }
+
+    @POST
+    @Path("/changePassword")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String changePassword(String requestJSON,@CookieParam("AuthenticationKey")Cookie cookie) {
+        Map<String,Object> changePasswordResponse = new HashMap<>();
+        Response.Status status=null;
+        String authKey = cookie.getValue();
+        String loggedInUser = authKey.split("\\$")[1];
+        try {
+            UserService userService = new UserService();
+            ForgotPassword forgotPasswordBean = userService.convertJSONIntoBean(requestJSON,ForgotPassword.class);
+
+            try {
+                userService.changePassword(forgotPasswordBean, loggedInUser);
+                changePasswordResponse.put("status","success");
+                changePasswordResponse.put("message","Password Changed Successfully, Please refresh the page.");
+            }catch (Exception ex){
+                changePasswordResponse.put("status","fail");
+                changePasswordResponse.put("error",ex.getMessage());
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+            changePasswordResponse.put("error","Request JSON is invalid");
+            changePasswordResponse.put("status","fail");
+        }
+        Gson gson = new Gson();
+        return gson.toJson(changePasswordResponse);
     }
 }
