@@ -30,7 +30,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         String []authKey=null;
         Cookie cookie=cookies.get(AUTHENTICATION_HEADER);
         logger.info("Request URI is {} ",requestURI);
-        if(!requestURI.contains("login") && !requestURI.contains("signup") && !requestURI.contains("forgotPassword")){
+        if(!requestURI.contains("login") && !requestURI.contains("signup") && !requestURI.contains("forgotPassword") && !requestURI.contains("getDashboardData")){
             if(cookie!=null && !Strings.isNullOrEmpty(cookie.getValue())){
                 logger.info("Authentication Key : {}",cookie.getValue());
                 authKey=cookie.getValue().split("\\$");

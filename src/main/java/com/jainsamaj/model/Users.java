@@ -153,4 +153,9 @@ public class Users {
     public void setPasswordChangeDtm(Date passwordChangeDtm) {
         this.passwordChangeDtm = passwordChangeDtm;
     }
+
+    @Override
+    public String toString() {
+        return "[ FirstName : "+firstName+", LastName : "+lastName+"]";
+    }
 }

@@ -1,15 +1,18 @@
 package com.jainsamaj.controller;
 
 import com.google.gson.Gson;
+import com.jainsamaj.dto.DashboardDTO;
 import com.jainsamaj.exception.AuthenticationException;
 import com.jainsamaj.exception.UserCreationException;
 import com.jainsamaj.model.ForgotPassword;
-import com.jainsamaj.model.Users;
 import com.jainsamaj.model.UserProfile;
+import com.jainsamaj.model.Users;
+import com.jainsamaj.services.LoginService;
 import com.jainsamaj.services.UserService;
 import com.jainsamaj.util.EncryptionUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.jws.soap.SOAPBinding;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
@@ -25,11 +28,32 @@ import java.util.Map;
 @Path("/api")
 public class LoginController {
 
+    private static Logger logger= LoggerFactory.getLogger(LoginController.class);
+
     @GET
     @Path("/test")
     @Produces(MediaType.TEXT_HTML)
     public String testGet(){
         return "Hello GET is working!";
+    }
+
+    @GET
+    @Path("/getDashboardData")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getDashboardData() {
+        Map<String,Object> dashboardResponse = new HashMap<>();
+
+        try {
+            LoginService service = new LoginService();
+            DashboardDTO dashboardDTO = service.getDashboardData();
+            dashboardResponse.put("status","success");
+            dashboardResponse.put("_result",dashboardDTO);
+        }catch (Exception ex){
+            dashboardResponse.put("status","fail");
+            dashboardResponse.put("error",ex.getMessage());
+        }
+        Gson gson = new Gson();
+        return gson.toJson(dashboardResponse);
     }
 
     @POST
@@ -132,12 +156,12 @@ public class LoginController {
                 userService.forgotPassword(users.getEmailId());
                 forgotPasswordResponse.put("status","success");
             }catch (Exception ex){
-                ex.printStackTrace();
+                logger.error("Error in processing forgotPassword Request {}",ex.getMessage());
                 forgotPasswordResponse.put("status","fail");
                 forgotPasswordResponse.put("error",ex.getMessage());
             }
         }catch (Exception e){
-            e.printStackTrace();
+
             forgotPasswordResponse.put("error","Request JSON is invalid");
             forgotPasswordResponse.put("status","fail");
         }
@@ -166,7 +190,7 @@ public class LoginController {
                 changePasswordResponse.put("error",ex.getMessage());
             }
         }catch (Exception ex){
-            ex.printStackTrace();
+            logger.error("Error in processing changePassword Request {}",ex.getMessage());
             changePasswordResponse.put("error","Request JSON is invalid");
             changePasswordResponse.put("status","fail");
         }

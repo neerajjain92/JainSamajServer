@@ -81,7 +81,7 @@ public class UserService {
                 users.setPmfKey(pmfKey);
                 Long userId = userDao.saveEntity(users);
 
-                System.out.println("Generated PMF Key is "+pmfKey);
+                logger.debug("Generated PMF Key is {} ",pmfKey);
                 //Creating a Topic for Signed Up user [In order to Send SMS/EMAIl].
                 if(userId != null) {
                     final String topicARN = SimpleNotificationService.createTopic(pmfKey);

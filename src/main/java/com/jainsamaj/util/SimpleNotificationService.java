@@ -6,6 +6,8 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sns.AmazonSNSClient;
 import com.amazonaws.services.sns.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by jaine03 on 15/02/17.
@@ -13,6 +15,7 @@ import com.amazonaws.services.sns.model.*;
 public class SimpleNotificationService {
 
     private static AmazonSNSClient snsClient;
+    private static Logger logger = LoggerFactory.getLogger(SimpleNotificationService.class);
 
     static {
         //create a new SNS client and set endpoint
@@ -33,9 +36,9 @@ public class SimpleNotificationService {
         CreateTopicResult createTopicResult = snsClient.createTopic(createTopicRequest);
 
         //print TopicArn
-        System.out.println(createTopicResult);
+        logger.debug("Create Topic Result {}",createTopicResult);
         //get request id for CreateTopicRequest from SNS metadata
-        System.out.println("CreateTopicRequest - " + snsClient.getCachedResponseMetadata(createTopicRequest));
+        logger.debug("CreateTopicRequest - {} ", snsClient.getCachedResponseMetadata(createTopicRequest));
 
         return createTopicResult.getTopicArn();
     }
@@ -53,8 +56,8 @@ public class SimpleNotificationService {
         snsClient.subscribe(subscribeRequest);
 
         //Get Request Id for Subscription
-        System.out.println("SubscribeRequest - " + snsClient.getCachedResponseMetadata(subscribeRequest));
-        System.out.println("Check your email and confirm subscription.");
+        logger.debug("SubscribeRequest - " , snsClient.getCachedResponseMetadata(subscribeRequest));
+        logger.debug("Check your email and confirm subscription.");
 
         return snsClient.getCachedResponseMetadata(subscribeRequest).getRequestId();
     }
@@ -65,7 +68,7 @@ public class SimpleNotificationService {
         PublishRequest publishRequest = new PublishRequest(topicARN, message);
         PublishResult publishResult = snsClient.publish(publishRequest);
         //print MessageId of message published to SNS topic
-        System.out.println("MessageId - " + publishResult.getMessageId());
+        logger.debug("MessageId - {} ", publishResult.getMessageId());
         return publishResult.getMessageId();
     }
 }

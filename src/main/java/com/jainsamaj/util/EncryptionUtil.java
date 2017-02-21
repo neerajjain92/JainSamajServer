@@ -1,6 +1,7 @@
 package com.jainsamaj.util;
 
-import org.apache.commons.codec.digest.DigestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -10,6 +11,7 @@ import java.security.NoSuchAlgorithmException;
  */
 public class EncryptionUtil {
 
+    private static Logger logger= LoggerFactory.getLogger(EncryptionUtil.class);
     public static String encrypt(String plainText){
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
@@ -22,7 +24,7 @@ public class EncryptionUtil {
             }
             return sb.toString();
         } catch (NoSuchAlgorithmException ex) {
-            ex.printStackTrace();
+            logger.error("Error while encrypting Password {}",ex.getMessage());
         }
         return null;
     }

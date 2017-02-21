@@ -23,7 +23,6 @@ public class GenericDao {
     private static Logger logger= LoggerFactory.getLogger(GenericDao.class);
 
     public <T> T getEntityByProperty(Map<String,Object> property, Class<T> type) {
-        System.out.println(property+ " "+type.getClass());
         Session session = null;
         Transaction tx = null;
         try {
